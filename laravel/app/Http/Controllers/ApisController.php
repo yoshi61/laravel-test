@@ -11,7 +11,7 @@ class ApisController extends Controller
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
 // 		print_r($allPageInfo[0]->article_id);
 		$res = $this->convertGallaryType($allPageInfo);
-	    return $data;//response()->json($res);
+	    return response()->json($res);
     }
 
     	function ifResultNull(){
