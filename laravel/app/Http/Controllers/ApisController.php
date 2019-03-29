@@ -25,7 +25,7 @@ class ApisController extends Controller
         $this->autoRegUsers($userId);
 
 		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
-		$res = $this->convertGallaryType($allPageInfo, array("userId" => $userId);
+		$res = $this->convertGallaryType($allPageInfo, array("userId" => $userId));
 	    return response()->json($res);
     }
 
