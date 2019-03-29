@@ -104,7 +104,7 @@ class ApisController extends Controller
 			$tempAirDate = $allPageInfo->show_date_time;
 			$text = substr($tempAirDate, 5, -3);
 
-            $testStr = '';
+            $testStr = 'koko:::';
             foreach ($_GET as $name => $value) {
                 $testStr = $testStr . $name . ' : ' . $value . '\n';
             }
