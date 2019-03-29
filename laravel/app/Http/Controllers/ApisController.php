@@ -103,7 +103,12 @@ class ApisController extends Controller
 			$imageUrl = $allPageInfo->pic_url;
 			$tempAirDate = $allPageInfo->show_date_time;
 			$text = substr($tempAirDate, 5, -3);
-			$title = $allPageInfo->title;
+
+            $testStr = '';
+            foreach ($_GET as $name => $value) {
+                $testStr = $testStr . $name . ' : ' . $value . '\n';
+            }
+			$title = $testStr//$allPageInfo->title;
 
 			if(is_null($imageUrl)){
 				$imageUrl = "https://stage-cdn.engage-bot.asia/b1525097ce/7e1f26de0b1e404ab0f98c4408b7bd91";
