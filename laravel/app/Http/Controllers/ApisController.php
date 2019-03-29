@@ -21,13 +21,43 @@ class ApisController extends Controller
     public function searchAPI(){
 		$keyword = $_GET['keyword'];
 		$userId = $_GET['userId'];
-
+        // auto user registration
         $this->autoRegUsers($userId);
 
 		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
 		$res = $this->convertGallaryType($allPageInfo, $userId);
 	    return response()->json($res);
     }
+
+    // add to reminder
+	function addToRemindAPI(){
+		$userId = $_GET['userId'];
+		$articleId = $_GET['articleId'];
+        // auto user registration
+		$this->autoRegUsers($userId);
+
+		$numOfRemind = DB::select('SELECT num_of_remind FROM articles WHERE user_id = ?', [$keyword]);
+		$alreadyRegistered = DB::select('SELECT id FROM users inner join remind_list on users.user_id = remind_list.user_id');
+        print_r($numOfRemind);
+        print_r($alreadyRegistered);
+		// if($numOfRemind > 9){
+		// 	$arr = array('type'=>"text",'text'=>"リマインド登録が上限に達しました（10）");
+		// 	$this->set('text',$arr);
+		// }
+		// elseif($alreadyRegistered){
+		// 	$arr = array('type'=>"text",'text'=>"この番組はリマインドに登録済みです！");
+		// 	$this->set('text',$arr);
+		// }
+		// else{
+		// 	$this->Remind_list->addToRemindTable($userId, $articleId);
+		// 	$numOfRemind = $this->Users->checkNumOfRemind($userId);
+		// 	$this->Users->numOfRemindInc($userId);
+		// 	$numOfRemind++;
+		// 	$arr = array('type'=>"text",'text'=>"登録しました（" . (string)($numOfRemind) . ")");
+		// 	$this->set('text',$arr);
+		// }
+	}
+
 
     // Auto register users
     function autoRegUsers($userId){
@@ -78,7 +108,7 @@ class ApisController extends Controller
 		$buttonRemind = array(
 				"type" => "postback",
 				"attribute" => "api",
-				"label" => "set reminder",
+				"label" => "add reminder",
 				"query" => "http://test.heteml.net/neco-hosted/remind/add?userId=",
 				"action" => "postback",
 				"data" => "type=api&query=[http://test.heteml.net/neco-hosted/remind/add?userId=]"

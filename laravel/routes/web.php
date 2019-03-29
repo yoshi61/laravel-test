@@ -15,5 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/todayAPI', 'ApisController@todayAPI');
-Route::get('/searchAPI', 'ApisController@searchAPI');
+Route::get('/today-API', 'ApisController@todayAPI');
+Route::get('/search-API', 'ApisController@searchAPI');
+Route::get('/add-remind-API', 'ApisController@addRemindAPI');
