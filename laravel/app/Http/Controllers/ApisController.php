@@ -36,7 +36,7 @@ class ApisController extends Controller
         // auto user registration
 		$this->autoRegUsers($userId);
 
-		$numOfRemind = DB::select('SELECT num_of_remind FROM users WHERE user_id = ?', [$userId]);
+		$numOfRemind = DB::select('SELECT num_of_remind FROM users WHERE user_id = ?', [$userId])[0]['num_of_remind'];
 		$alreadyRegistered = DB::select('SELECT id FROM users inner join remind_list on users.user_id = remind_list.user_id');
         print_r($numOfRemind);
         print_r($alreadyRegistered);
