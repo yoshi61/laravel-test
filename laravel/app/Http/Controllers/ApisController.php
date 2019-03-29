@@ -10,7 +10,7 @@ class ApisController extends Controller
     public function todayAPI(){
 		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10');
         if(count($allPageInfo)){
-            $res = $this->convertGallaryType($allPageInfo, $userId);
+            $res = $this->convertGallaryType($allPageInfo, array());
         }
         else{
             $res = $this->ifResultNull();
@@ -25,7 +25,7 @@ class ApisController extends Controller
         $this->autoRegUsers($userId);
 
 		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
-		$res = $this->convertGallaryType($allPageInfo, $userId);
+		$res = $this->convertGallaryType($allPageInfo, array("userId" => $userId);
 	    return response()->json($res);
     }
 
@@ -37,25 +37,24 @@ class ApisController extends Controller
 		$this->autoRegUsers($userId);
 
 		$numOfRemind = DB::select('SELECT num_of_remind FROM users WHERE user_id = ?', [$userId])[0]->num_of_remind;
-		$alreadyRegistered = DB::select('SELECT id FROM users inner join remind_list on users.user_id = remind_list.user_id');
-        print_r($numOfRemind);
-        print_r($alreadyRegistered);
-		// if($numOfRemind > 9){
-		// 	$arr = array('type'=>"text",'text'=>"リマインド登録が上限に達しました（10）");
-		// 	$this->set('text',$arr);
-		// }
-		// elseif($alreadyRegistered){
-		// 	$arr = array('type'=>"text",'text'=>"この番組はリマインドに登録済みです！");
-		// 	$this->set('text',$arr);
-		// }
-		// else{
-		// 	$this->Remind_list->addToRemindTable($userId, $articleId);
-		// 	$numOfRemind = $this->Users->checkNumOfRemind($userId);
-		// 	$this->Users->numOfRemindInc($userId);
-		// 	$numOfRemind++;
-		// 	$arr = array('type'=>"text",'text'=>"登録しました（" . (string)($numOfRemind) . ")");
-		// 	$this->set('text',$arr);
-		// }
+		$alreadyRegistered = count(DB::select('SELECT id FROM users inner join remind_list on users.user_id = remind_list.user_id'));
+
+		if($numOfRemind > 9){
+			$arr = array('type'=>"text",'text'=>"reminder has reached its limit（10）");
+			$this->set('text',$arr);
+		}
+		elseif($alreadyRegistered){
+			$arr = array('type'=>"text",'text'=>"this show has already been registered！");
+			$this->set('text',$arr);
+		}
+		else{
+			$this->Remind_list->addToRemindTable($userId, $articleId);
+			$numOfRemind = $this->Users->checkNumOfRemind($userId);
+			$this->Users->numOfRemindInc($userId);
+			$numOfRemind++;
+			$arr = array('type'=>"text",'text'=>"登録しました（" . (string)($numOfRemind) . ")");
+			$this->set('text',$arr);
+		}
 	}
 
 
@@ -104,7 +103,7 @@ class ApisController extends Controller
 	}
 
 	// convert all page info to a format that can be displayed as Gallary(slide window) on Facebook and LINE
-	function convertGallaryType($allPageInfo, $userId){
+	function convertGallaryType($allPageInfo, $vals){
 		$buttonRemind = array(
 				"type" => "postback",
 				"attribute" => "api",
