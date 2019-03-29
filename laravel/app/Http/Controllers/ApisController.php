@@ -22,13 +22,17 @@ class ApisController extends Controller
 		$keyword = $_GET['keyword'];
 		$userId = $_GET['userId'];
 
-		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
-		$res = $this->convertGallaryType($allPageInfo);
-	    return response()->json($res);
+        $this->autoRegUsers($userId);
+
+		// $allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
+		// $res = $this->convertGallaryType($allPageInfo);
+	    // return response()->json($res);
     }
 
     // Auto register users
     function autoRegUsers($userId){
+        $res = DB::select('SELECT id FROM users WHERE user_id = ?', [$userId]);
+        print_r($res);
         return;
     }
 
