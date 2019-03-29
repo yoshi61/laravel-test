@@ -9,7 +9,12 @@ class ApisController extends Controller
 {
     public function todayAPI(){
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
-		$res = $this->convertGallaryType($allPageInfo);
+        if(!count($allPageInfo)){
+            $res = $this->convertGallaryType($allPageInfo);
+        }
+        else{
+            $res = ifResultNull();
+        }
 	    return response()->json($res);
     }
 
@@ -30,6 +35,11 @@ class ApisController extends Controller
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
 		$res = $this->convertGallaryType($allPageInfo);
 	    return response()->json($res);
+    }
+
+    // Auto register users
+    function autoRegUsers($userId){
+        return;
     }
 
     // If nothing can be fund in the database, reply message instead
