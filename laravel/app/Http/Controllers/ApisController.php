@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class ApisController extends Controller
 {
     public function todayAPI(){
-		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
+		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10');
         if(count($allPageInfo)){
             $res = $this->convertGallaryType($allPageInfo);
         }
@@ -32,7 +32,10 @@ class ApisController extends Controller
     // Auto register users
     function autoRegUsers($userId){
         $res = DB::select('SELECT id FROM users WHERE user_id = ?', [$userId]);
-        print_r($res);
+        // if not registered
+        if(!count($res)){
+            DB::insert('INSERT INTO users (user_id) values (?)', [$userId]);
+        }
         return;
     }
 
