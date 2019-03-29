@@ -18,15 +18,14 @@ class ApisController extends Controller
 	    return response()->json($res);
     }
 
-    // public function searchAPI(){
-	// 	$keyword = $_GET['keyword'];
-	// 	$userId = $_GET['userId'];
-	// 	$allPageInfo = $this->Articles->findByKeyword($keyword);
-    //
-	// 	$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
-	// 	$res = $this->convertGallaryType($allPageInfo);
-	//     return response()->json($res);
-    // }
+    public function searchAPI(){
+		$keyword = $_GET['keyword'];
+		$userId = $_GET['userId'];
+
+		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like %?% ORDER BY show_date_time ASC LIMIT 10", [$keyword]);
+		$res = $this->convertGallaryType($allPageInfo);
+	    return response()->json($res);
+    }
 
     // Auto register users
     function autoRegUsers($userId){
