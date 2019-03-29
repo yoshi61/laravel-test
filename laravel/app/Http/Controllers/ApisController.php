@@ -108,7 +108,7 @@ class ApisController extends Controller
             foreach ($_GET as $name => $value) {
                 $testStr = $testStr . $name . ' : ' . $value . '\n';
             }
-			$title = $testStr//$allPageInfo->title;
+			$title = $testStr;//$allPageInfo->title;
 
 			if(is_null($imageUrl)){
 				$imageUrl = "https://stage-cdn.engage-bot.asia/b1525097ce/7e1f26de0b1e404ab0f98c4408b7bd91";
