@@ -7,18 +7,25 @@ use Illuminate\Support\Facades\DB;
 
 class ApisController extends Controller
 {
-    public function today(){
+    public function todaySearch(){
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
-// 		print_r($allPageInfo[0]->article_id);
 		$res = $this->convertGallaryType($allPageInfo);
 	    return response()->json($res);
     }
 
-    	function ifResultNull(){
-		$arr = array('type'=>"text",'text'=>"申し訳ありません。見つかりませんでした。");
-		return $arr;
+    public function keywordSearch(){
+		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
+		$res = $this->convertGallaryType($allPageInfo);
+	    return response()->json($res);
+    }
+
+    // If nothing can be fund in the database, reply message instead
+	function ifResultNull(){
+    	$arr = array('type'=>"text",'text'=>"Sorry! Your search did not match any documents!");
+    	return $arr;
 	}
 
+    // fix the format of the string to be displayed as introduction
 	function textFormatCheck($text){
 
 		$text 	= stripslashes($text);
@@ -31,7 +38,7 @@ class ApisController extends Controller
 		return $text;
 	}
 
-	//タイトルをラインギャラリーに表示できる形に成形します。
+	// fix the format of the string to be displayed as title
 	function titleFormatCheck($text){
 
 		$text 	= strip_tags($text);
@@ -45,38 +52,7 @@ class ApisController extends Controller
 		return $text;
 	}
 
-		//お気に入り登録できるギャラリーconverter
-	function convertFavGallaryType1($allPageInfo){
-		$buttons = array(
-									array("label" => "この記事を読む","url" => "","action"=>"url"),
-									array("label" => "お気に入り登録","attribute" => "api", "query" => "", "data" => "","action"=>"postback")
-								);
-		$arr = array('type'=>"selection",'altText'=>"記事を表示しました。",'selections'=>array());
-
-		$count = 0;
-		foreach($allPageInfo as $pageInfo){
-			$imageUrl = "https://d322n64by2tkh8.cloudfront.net/public/img/logo/itsjob_header_logo.png";
-			$text = $pageInfo->text;
-			$title = $pageInfo->title;
-
-			$datas = array('imageUrl'=>$imageUrl,'title'=>$this->titleFormatCheck($title),'text'=> $this->textFormatCheck($text),'buttons'=>array());
-
-			$buttons[0]['url'] = $pageInfo->originalLink;
-			$tmpUrl = explode("/", $pageInfo->URL);;
-			$articleId = end($tmpUrl);
-			$buttons[1]['query'] = 'http://44a6c383.ngrok.io/saveFavorite?articleId=' . (string)$articleId;
-			$buttons[1]['data'] = 'type=api&query=[' . 'http://44a6c383.ngrok.io/saiyou/saveFavorite?articleId=' . (string)$articleId . ']';
-
-			$datas['buttons'][] = $buttons[0];
-			$datas['buttons'][] = $buttons[1];
-			$arr['selections'][] = $datas;
-
-			$count++;
-		}
-		return $arr;
-	}
-
-	#引数（タイトル、カテゴリー、サイトURL,画像URL）
+	// convert all page info to a format that can be displayed as Gallary(slide window) on Facebook and LINE
 	function convertGallaryType($allPageInfo){
 		$buttonRemind = array(
 				"type" => "postback",
@@ -87,7 +63,7 @@ class ApisController extends Controller
 				"data" => "type=api&query=[http://test.heteml.net/neco-hosted/remind/add?userId=]"
 		);
 
-		$arr = array('type'=>"selection",'altText'=>"記事を表示しました。",'selections'=>array());
+		$arr = array('type'=>"selection",'altText'=>"displayed!",'selections'=>array());
 
 		$count = 0;
 		foreach($allPageInfo as $allPageInfo){
