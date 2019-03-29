@@ -13,7 +13,7 @@ class ApisController extends Controller
             $res = $this->convertGallaryType($allPageInfo);
         }
         else{
-            $res = ifResultNull();
+            $res = $this->ifResultNull();
         }
 	    return response()->json($res);
     }
