@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class ApisController extends Controller
 {
-    public function todaySearch(){
+    public function todayAPI(){
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
 		$res = $this->convertGallaryType($allPageInfo);
 	    return response()->json($res);
     }
 
-    public function keywordSearch(){
+    public function searchAPI(){
+
 		$allPageInfo = DB::select("SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10");
 		$res = $this->convertGallaryType($allPageInfo);
 	    return response()->json($res);
