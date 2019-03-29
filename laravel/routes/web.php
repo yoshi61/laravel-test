@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/today', 'ApisController@today');
+Route::get('/today', 'ApisController@todaySearch');
