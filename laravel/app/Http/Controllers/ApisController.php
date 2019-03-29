@@ -77,7 +77,7 @@ class ApisController extends Controller
   ]
 }';
 		$res = $this->convertGallaryType($allPageInfo);
-	    return data;//response()->json($res);
+	    return $data;//response()->json($res);
     }
 
     	function ifResultNull(){
