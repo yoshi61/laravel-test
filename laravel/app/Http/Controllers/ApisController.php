@@ -30,7 +30,7 @@ class ApisController extends Controller
     }
 
     // add to reminder
-	function addToRemindAPI(){
+	function addRemindAPI(){
 		$userId = $_GET['userId'];
 		$articleId = $_GET['articleId'];
         // auto user registration
