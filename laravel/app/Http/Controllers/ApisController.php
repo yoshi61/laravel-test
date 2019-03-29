@@ -10,7 +10,7 @@ class ApisController extends Controller
     public function todayAPI(){
 		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE show_date_time >= NOW() + INTERVAL 1 HOUR AND show_date_time <= NOW() + INTERVAL 25 HOUR ORDER BY show_date_time ASC LIMIT 10');
         if(count($allPageInfo)){
-            $res = $this->convertGallaryType($allPageInfo);
+            $res = $this->convertGallaryType($allPageInfo, $userId);
         }
         else{
             $res = $this->ifResultNull();
@@ -24,9 +24,9 @@ class ApisController extends Controller
 
         $this->autoRegUsers($userId);
 
-		// $allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
-		// $res = $this->convertGallaryType($allPageInfo);
-	    // return response()->json($res);
+		$allPageInfo = DB::select('SELECT * FROM show_date_time inner join articles on articles.article_id = show_date_time.article_id WHERE title like "%'. $keyword .'%" ORDER BY show_date_time ASC LIMIT 10');
+		$res = $this->convertGallaryType($allPageInfo, $userId);
+	    return response()->json($res);
     }
 
     // Auto register users
@@ -74,7 +74,7 @@ class ApisController extends Controller
 	}
 
 	// convert all page info to a format that can be displayed as Gallary(slide window) on Facebook and LINE
-	function convertGallaryType($allPageInfo){
+	function convertGallaryType($allPageInfo, $userId){
 		$buttonRemind = array(
 				"type" => "postback",
 				"attribute" => "api",
