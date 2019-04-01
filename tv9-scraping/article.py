@@ -4,8 +4,8 @@ import re
 from bs4 import BeautifulSoup
 import requests
 import chardet
-import urllib
-from urllib.parse import urlparse
+# import urllib
+# from urllib.parse import urlparse
 from bs4 import NavigableString, Declaration, Comment
 import helper
 from config import config
